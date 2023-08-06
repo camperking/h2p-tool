@@ -1,6 +1,6 @@
 [package]
 name = "h2p-tool"
-version = "1.0.0"
+version = "1.1.0"
 description = "desktop app for converting html files to pdf"
 authors = ["you"]
 license = ""

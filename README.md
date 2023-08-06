@@ -10,8 +10,9 @@ A desktop app for converting html files to pdf. It can handle multiple files and
 - 📚 Convert multiple files at once
 - 📥 Set output directory
 - 📄 Set page size
-- ⤵️ Set page orientation
+- ⤵️  Set page orientation
 - 🔁 Set page margins
+- 🔥 Drag and drop files  
 
 ## 🎮 How to use
 

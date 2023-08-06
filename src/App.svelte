@@ -3,10 +3,24 @@
     import { invoke } from "@tauri-apps/api/tauri";
     import { exit } from "@tauri-apps/api/process";
     import { open as openShell } from "@tauri-apps/api/shell";
+    import { listen } from "@tauri-apps/api/event";
     import Icon from "./lib/Icon.svelte";
     import Options from "./lib/Options.svelte";
 
-    let step = 0;
+    const unlisten = listen("tauri://file-drop", (event) => {
+        let droppedFiles = event.payload;
+
+        if (Array.isArray(droppedFiles)) {
+            // user selected multiple files
+            files = droppedFiles;
+        } else {
+            return;
+        }
+
+        step = 2;
+    });
+
+    let step = 1;
     let outputDir = "";
     let files: string[] = [];
 
@@ -28,7 +42,7 @@
             // user selected a directory
             outputDir = selected;
             step = 1;
-        }        
+        }
     }
 
     async function chooseFile() {
@@ -85,7 +99,6 @@
 </script>
 
 <main class="flex flex-col justify-between h-screen items-center">
-    
     <div class="flex flex-col items-center text-center pt-[10vh]">
         <div class="space-y-8">
             {#if step === 0}
@@ -100,6 +113,11 @@
                 <button class="btn btn-primary" on:click={chooseFile}>
                     File(s)
                 </button>
+                <div
+                    class="p-4 pt-8 pb-8 border border-dashed border-gray-400 rounded-md"
+                >
+                    Drag and drop files here
+                </div>
             {:else if step === 2}
                 <h1>3. Convert</h1>
                 <div class="badge badge-success">Output directory:</div>
@@ -127,7 +145,7 @@
                 </button>
                 <Options bind:PdfOptions={options} />
             {/if}
-    
+
             {#if loading}
                 <h1>Converting</h1>
                 <span class="loading loading-spinner loading-lg" />
@@ -143,7 +161,9 @@
                     <Icon icon="external-link" size="16" />
                 </button>
                 <div>
-                    <button class="btn btn-primary" on:click={reset}> New </button>
+                    <button class="btn btn-primary" on:click={reset}>
+                        New
+                    </button>
                     <button class="btn btn-secondary" on:click={exitApp}>
                         Exit
                     </button>
@@ -153,7 +173,9 @@
                 <h1>Error</h1>
                 <p>Something went wrong</p>
                 <div>
-                    <button class="btn btn-primary" on:click={reset}> New </button>
+                    <button class="btn btn-primary" on:click={reset}>
+                        New
+                    </button>
                     <button class="btn btn-secondary" on:click={exitApp}>
                         Exit
                     </button>
@@ -169,5 +191,4 @@
             <Icon icon="github" />
         </button>
     </footer>
-
 </main>
